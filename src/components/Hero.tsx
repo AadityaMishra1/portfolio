@@ -38,11 +38,10 @@ export default function Hero() {
         transition={{ duration: 0.5, delay: 0.5 }}
         className="mt-6 text-text-secondary max-w-xl text-lg leading-relaxed"
       >
-        Computer Engineering at{" "}
-        <span className="text-text">NC State</span>. Previously at{" "}
-        <span className="text-text">Nutanix</span>. I ship systems — from
-        low-latency C++ trading engines to full-stack AI tools used by
-        thousands.
+        Computer Engineering at <span className="text-text">NC State</span>.
+        Previously at <span className="text-text">Nutanix</span>. I ship systems
+        — from low-latency C++ trading engines to production AI tools and apps
+        on the App Store.
       </motion.p>
 
       <motion.div

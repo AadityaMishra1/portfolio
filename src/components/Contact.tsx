@@ -4,12 +4,16 @@ import AnimatedSection from "./AnimatedSection";
 
 export default function Contact() {
   return (
-    <AnimatedSection className="max-w-5xl mx-auto px-6 py-24 text-center" id="contact">
+    <AnimatedSection
+      className="max-w-5xl mx-auto px-6 py-24 text-center"
+      id="contact"
+    >
       <h2 className="text-sm font-mono text-accent mb-6">What&apos;s Next?</h2>
       <h3 className="text-3xl sm:text-4xl font-bold mb-4">Get In Touch</h3>
       <p className="text-text-secondary max-w-md mx-auto mb-8 leading-relaxed">
-        I&apos;m looking for new-grad and internship opportunities in systems engineering,
-        full-stack development, and quantitative software. Always open to interesting conversations.
+        I&apos;m looking for new-grad and internship opportunities in systems
+        engineering, full-stack development, and quantitative software. Always
+        open to interesting conversations.
       </p>
 
       <a
@@ -47,7 +51,16 @@ export default function Contact() {
           className="text-text-secondary hover:text-accent transition-colors"
           aria-label="Email"
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <rect x="2" y="4" width="20" height="16" rx="2" />
             <path d="M22 7l-10 7L2 7" />
           </svg>
@@ -55,7 +68,7 @@ export default function Contact() {
       </div>
 
       <footer className="mt-20 text-xs text-text-secondary">
-        <p>Built with Next.js & Tailwind CSS.</p>
+        <p>&copy; {new Date().getFullYear()} Aaditya Mishra</p>
       </footer>
     </AnimatedSection>
   );

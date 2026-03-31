@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import AnimatedSection from "./AnimatedSection";
 
@@ -9,10 +10,12 @@ interface Project {
   tag: string;
   tagColor: string;
   description: string;
-  metrics?: string[];
+  longDescription: string;
+  metrics?: { label: string; value: string }[];
   tech: string[];
-  link?: string;
+  link: string;
   liveUrl?: string;
+  appStoreUrl?: string;
   image?: string;
 }
 
@@ -20,149 +23,334 @@ const projects: Project[] = [
   {
     title: "Contrarian Options Alpha",
     tag: "Systems",
-    tagColor: "text-red-400",
+    tagColor: "text-red-400 bg-red-400/10",
     description:
-      "High-performance C++20 options trading engine with a lock-free SPSC ring buffer. Implements research-backed strategies — HV-IV gap, PEAD, regime filtering — with paper and live trading via IBKR.",
-    metrics: ["29M msg/sec", "85ns latency", "95.7% win rate", "2.75 Sharpe"],
-    tech: ["C++20", "Python", "pybind11", "IBKR API", "CMake"],
+      "C++20 options trading engine with lock-free SPSC ring buffer and sub-100ns latency.",
+    longDescription:
+      "High-performance quantitative trading engine implementing research-backed strategies — HV-IV gap exploitation, post-earnings announcement drift (PEAD), and regime filtering. Features a lock-free single-producer single-consumer ring buffer for zero-contention message passing. Includes a full backtesting framework, paper trading mode, and live execution via Interactive Brokers API. The Python layer uses pybind11 bindings for strategy research and AI-driven sentiment analysis with FinBERT.",
+    metrics: [
+      { label: "Throughput", value: "29M msg/sec" },
+      { label: "Latency", value: "85ns" },
+      { label: "Win Rate", value: "95.7%" },
+      { label: "Sharpe Ratio", value: "2.75" },
+    ],
+    tech: ["C++20", "Python", "pybind11", "IBKR API", "CMake", "FinBERT", "Polygon.io"],
     link: "https://github.com/AadityaMishra1/Contrarian-Options-Alpha-Engine",
-    image: "/projects/quant.png",
+  },
+  {
+    title: "NewsNine",
+    tag: "Mobile",
+    tagColor: "text-yellow-400 bg-yellow-400/10",
+    description:
+      "TikTok-style iOS news app with custom multi-factor feed ranking across 38+ sources.",
+    longDescription:
+      "Full-screen, swipe-based mobile news app with AI-generated bullet-point summaries. Dual news ingestion pipeline combining RSS feeds and news API for comprehensive coverage. Custom multi-factor scoring algorithm ranks stories by recency, source credibility, topic relevance, and engagement signals. Features gesture-driven navigation with React Native Reanimated, offline caching, and personalized feed preferences.",
+    metrics: [
+      { label: "Sources", value: "38+" },
+      { label: "Status", value: "Live on App Store" },
+    ],
+    tech: ["React Native", "Expo", "Supabase", "TypeScript", "Reanimated", "Zustand"],
+    link: "https://github.com/AadityaMishra1/NewsNine",
+    appStoreUrl: "https://apps.apple.com/us/app/newsnine/id6759874484",
+    image: "/projects/newsnine.png",
   },
   {
     title: "Almanac",
     tag: "Full-Stack",
-    tagColor: "text-green-400",
+    tagColor: "text-green-400 bg-green-400/10",
     description:
-      "AI syllabus parser that extracts every assignment, exam, and deadline from a PDF and syncs them to Google Calendar. 99% extraction accuracy. Used by students at NC State.",
-    metrics: ["99% accuracy", "Live in production"],
-    tech: ["Next.js 15", "Gemini AI", "Google Calendar API", "PostgreSQL", "Prisma"],
+      "AI syllabus parser that extracts deadlines and syncs them to Google Calendar with 99% accuracy.",
+    longDescription:
+      "Upload a syllabus PDF and Almanac uses Gemini AI to extract every assignment, exam, and deadline into structured data. Users review and edit extracted events before syncing directly to Google Calendar via OAuth. Built with Next.js 15 App Router, server actions for form handling, Prisma ORM with PostgreSQL on Supabase, and NextAuth for Google OAuth. Features a chat interface powered by Groq for asking questions about syllabi.",
+    metrics: [
+      { label: "Accuracy", value: "99%" },
+      { label: "Status", value: "Live in production" },
+    ],
+    tech: ["Next.js 15", "Gemini AI", "Google Calendar API", "PostgreSQL", "Prisma", "Groq"],
     link: "https://github.com/AadityaMishra1/Almanac",
     liveUrl: "https://almanaccal.com",
     image: "/projects/almanac.png",
   },
   {
-    title: "NewsNine",
-    tag: "Mobile",
-    tagColor: "text-yellow-400",
-    description:
-      "TikTok-style iOS news app with full-screen swipe navigation. Custom multi-factor feed ranking across 38+ sources with AI-generated bullet-point summaries.",
-    metrics: ["38+ sources", "Pending App Store review"],
-    tech: ["React Native", "Expo", "Supabase", "TypeScript", "Reanimated"],
-    link: "https://github.com/AadityaMishra1/NewsNine",
-  },
-  {
     title: "Gilfoyle",
     tag: "Desktop",
-    tagColor: "text-purple-400",
+    tagColor: "text-purple-400 bg-purple-400/10",
     description:
-      "Full-featured desktop environment for Claude Code. Multi-tab terminal sessions, real-time activity feed tracking file edits and git ops, MCP server monitoring, and plugin marketplace.",
-    tech: ["Electron", "React 18", "TypeScript", "xterm.js", "Zustand"],
+      "Full-featured desktop environment for Claude Code with multi-tab sessions and real-time monitoring.",
+    longDescription:
+      "Cross-platform desktop GUI wrapping Claude Code CLI with a professional IDE-like interface. Features multi-tab terminal sessions with resume capability, real-time activity feed tracking file edits, git operations, and test runs. Includes MCP server monitoring with tool counts, project-scoped active agent tracking, usage analytics with subscription percentages, and a command palette. Supports two layouts — Simple for focused work and Power for multi-panel dashboards.",
+    metrics: [
+      { label: "Platforms", value: "macOS / Win / Linux" },
+      { label: "Layouts", value: "Simple + Power" },
+    ],
+    tech: ["Electron 33", "React 18", "TypeScript", "xterm.js", "Zustand", "CodeMirror"],
     link: "https://github.com/AadityaMishra1/Gilfoyle",
     image: "/projects/gilfoyle.png",
   },
   {
     title: "CacheForge",
     tag: "ML",
-    tagColor: "text-cyan-400",
+    tagColor: "text-cyan-400 bg-cyan-400/10",
     description:
-      "LLM-driven C++ cache policy synthesis. Uses RAG to generate, compile, and benchmark novel cache replacement policies against ChampSim traces.",
-    metrics: ["600+ experiments", "309 valid policies generated"],
+      "LLM-driven C++ cache policy synthesis — generates, compiles, and benchmarks novel replacement policies.",
+    longDescription:
+      "Research project using large language models with retrieval-augmented generation (RAG) to autonomously synthesize novel CPU cache replacement policies in C++. The system generates policy code, compiles it against the ChampSim simulator, and benchmarks performance against industry-standard traces. Ran 600+ experiments producing 309 valid, compilable policies with varying performance characteristics.",
+    metrics: [
+      { label: "Experiments", value: "600+" },
+      { label: "Valid Policies", value: "309" },
+    ],
     tech: ["Python", "OpenAI", "C++", "ChampSim", "RAG"],
+    link: "https://github.com/AadityaMishra1/ECE-492-CacheForge-HW1",
   },
   {
     title: "Virtual Surgery Simulation",
     tag: "Research",
-    tagColor: "text-orange-400",
+    tagColor: "text-orange-400 bg-orange-400/10",
     description:
-      "Refactored a monolithic 7,000-line surgical simulation for PAD and CAD vascular models. NumPy/SciPy vectorization achieved a 26x rendering speedup.",
-    metrics: ["26x speedup", "530s → <20s render time"],
+      "Refactored 7,000-line surgical simulation — NumPy/SciPy vectorization achieved 26x rendering speedup.",
+    longDescription:
+      "Undergraduate research project refactoring a monolithic Python surgical simulation for peripheral arterial disease (PAD) and coronary artery disease (CAD) vascular models. Replaced loop-heavy computation with NumPy/SciPy vectorized operations, reducing rendering time from ~530 seconds to under 20 seconds. Built steady-state hemodynamic solvers and integrated VTK/VMTK visualization pipelines for 3D vascular geometry rendering.",
+    metrics: [
+      { label: "Speedup", value: "26x" },
+      { label: "Render Time", value: "530s → <20s" },
+    ],
     tech: ["Python", "VTK", "VMTK", "NumPy", "SciPy"],
+    link: "https://github.com/AadityaMishra1",
     image: "/projects/surgery.png",
   },
 ];
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
-  const isLarge = index < 2;
+function ProjectModal({
+  project,
+  onClose,
+}: {
+  project: Project;
+  onClose: () => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm"
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-xl border border-border bg-surface"
+      >
+        {project.image && (
+          <div className="relative w-full h-48 sm:h-64 overflow-hidden rounded-t-xl">
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              className="object-cover object-top"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-surface" />
+          </div>
+        )}
 
+        <div className="p-6 sm:p-8">
+          <div className="flex items-center justify-between mb-4">
+            <span
+              className={`text-xs font-mono uppercase tracking-wider px-2.5 py-1 rounded-full ${project.tagColor}`}
+            >
+              {project.tag}
+            </span>
+            <button
+              onClick={onClose}
+              className="text-text-secondary hover:text-text transition-colors p-1"
+              aria-label="Close"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M4 4l12 12M16 4L4 16" />
+              </svg>
+            </button>
+          </div>
+
+          <h3 className="text-2xl font-bold mb-4">{project.title}</h3>
+
+          <p className="text-sm text-text-secondary leading-relaxed mb-6">
+            {project.longDescription}
+          </p>
+
+          {project.metrics && (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+              {project.metrics.map((m) => (
+                <div key={m.label} className="rounded-lg bg-bg p-3 text-center">
+                  <p className="text-lg font-bold text-accent">{m.value}</p>
+                  <p className="text-xs text-text-secondary mt-0.5">{m.label}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="flex flex-wrap gap-1.5 mb-6">
+            {project.tech.map((t) => (
+              <span
+                key={t}
+                className="text-xs font-mono px-2.5 py-1 rounded-full bg-accent/10 text-accent/80"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm text-text-secondary hover:text-text hover:border-text-secondary transition-colors"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+              </svg>
+              Source Code
+            </a>
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-lg text-sm hover:bg-accent-dim transition-colors"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+                Live Site
+              </a>
+            )}
+            {project.appStoreUrl && (
+              <a
+                href={project.appStoreUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 text-white rounded-lg text-sm hover:bg-white/20 transition-colors"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+                </svg>
+                App Store
+              </a>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function ProjectCard({
+  project,
+  index,
+  onClick,
+}: {
+  project: Project;
+  index: number;
+  onClick: () => void;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.4, delay: index * 0.08 }}
-      className={`group relative rounded-xl border border-border bg-surface overflow-hidden transition-all duration-300 hover:border-accent/30 hover:bg-surface-hover ${
-        isLarge ? "md:col-span-2 md:row-span-2" : ""
-      }`}
+      onClick={onClick}
+      className="group relative rounded-xl border border-border bg-surface overflow-hidden transition-all duration-300 hover:border-accent/30 hover:bg-surface-hover cursor-pointer"
     >
-      {project.image && isLarge && (
-        <div className="relative w-full h-48 md:h-56 overflow-hidden">
+      {project.image && (
+        <div className="relative w-full h-44 sm:h-52 overflow-hidden">
           <Image
             src={project.image}
             alt={project.title}
             fill
-            className="object-cover object-top opacity-60 group-hover:opacity-80 transition-opacity duration-300"
+            className="object-cover object-top opacity-50 group-hover:opacity-75 group-hover:scale-[1.03] transition-all duration-500"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-surface" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-surface/30 to-surface" />
         </div>
       )}
 
-      <div className="p-5 md:p-6">
+      <div className="p-5">
         <div className="flex items-center justify-between mb-3">
-          <span className={`text-xs font-mono uppercase tracking-wider ${project.tagColor}`}>
+          <span
+            className={`text-xs font-mono uppercase tracking-wider px-2 py-0.5 rounded-full ${project.tagColor}`}
+          >
             {project.tag}
           </span>
-          <div className="flex gap-3">
-            {project.link && (
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-text-secondary hover:text-text transition-colors"
-                aria-label="GitHub"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                </svg>
-              </a>
-            )}
+          <div className="flex gap-2.5">
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="text-text-secondary hover:text-text transition-colors"
+              aria-label="GitHub"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+              </svg>
+            </a>
             {project.liveUrl && (
               <a
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
                 className="text-text-secondary hover:text-accent transition-colors"
                 aria-label="Live site"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
                   <polyline points="15 3 21 3 21 9" />
                   <line x1="10" y1="14" x2="21" y2="3" />
                 </svg>
               </a>
             )}
+            {project.appStoreUrl && (
+              <a
+                href={project.appStoreUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="text-text-secondary hover:text-accent transition-colors"
+                aria-label="App Store"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+                </svg>
+              </a>
+            )}
           </div>
         </div>
 
-        <h3 className="text-lg font-semibold mb-2 group-hover:text-accent transition-colors">
+        <h3 className="text-base font-semibold mb-2 group-hover:text-accent transition-colors">
           {project.title}
         </h3>
 
-        <p className="text-sm text-text-secondary leading-relaxed mb-4">
+        <p className="text-sm text-text-secondary leading-relaxed mb-3">
           {project.description}
         </p>
 
         {project.metrics && (
-          <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mb-3">
             {project.metrics.map((m) => (
-              <span key={m} className="text-xs font-mono text-text">
-                {m}
+              <span key={m.label} className="text-xs font-mono text-text">
+                {m.value}
               </span>
             ))}
           </div>
         )}
 
         <div className="flex flex-wrap gap-1.5">
-          {project.tech.map((t) => (
+          {project.tech.slice(0, 4).map((t) => (
             <span
               key={t}
               className="text-xs font-mono px-2 py-0.5 rounded bg-accent/10 text-accent/80"
@@ -170,6 +358,11 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               {t}
             </span>
           ))}
+          {project.tech.length > 4 && (
+            <span className="text-xs font-mono px-2 py-0.5 rounded bg-accent/10 text-accent/80">
+              +{project.tech.length - 4}
+            </span>
+          )}
         </div>
       </div>
     </motion.div>
@@ -177,15 +370,36 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 export default function Projects() {
-  return (
-    <AnimatedSection className="max-w-5xl mx-auto px-6 py-24" id="projects">
-      <h2 className="text-sm font-mono text-accent mb-12">Projects</h2>
+  const [selected, setSelected] = useState<Project | null>(null);
 
-      <div className="grid md:grid-cols-4 gap-4">
-        {projects.map((p, i) => (
-          <ProjectCard key={p.title} project={p} index={i} />
-        ))}
-      </div>
-    </AnimatedSection>
+  return (
+    <>
+      <AnimatedSection className="max-w-5xl mx-auto px-6 py-24" id="projects">
+        <h2 className="text-sm font-mono text-accent mb-2">Selected Work</h2>
+        <p className="text-text-secondary text-sm mb-12">
+          Click any project to see the full breakdown.
+        </p>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {projects.map((p, i) => (
+            <ProjectCard
+              key={p.title}
+              project={p}
+              index={i}
+              onClick={() => setSelected(p)}
+            />
+          ))}
+        </div>
+      </AnimatedSection>
+
+      <AnimatePresence>
+        {selected && (
+          <ProjectModal
+            project={selected}
+            onClose={() => setSelected(null)}
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 }
