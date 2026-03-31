@@ -3,11 +3,31 @@
 import AnimatedSection from "./AnimatedSection";
 
 const skills = [
-  { category: "Languages", items: ["C++20", "Python", "TypeScript", "JavaScript", "Swift", "SQL"] },
-  { category: "Systems", items: ["Lock-free data structures", "pybind11", "CMake", "IBKR API", "VTK/VMTK"] },
-  { category: "Web & Mobile", items: ["React", "Next.js", "React Native", "Expo", "Tailwind", "Prisma"] },
-  { category: "AI / ML", items: ["PyTorch", "NumPy/SciPy", "OpenAI API", "Gemini", "RAG", "FinBERT"] },
-  { category: "Infrastructure", items: ["PostgreSQL", "Supabase", "Docker", "Vercel", "Git", "CI/CD"] },
+  {
+    category: "Languages",
+    color: "text-red-400 bg-red-400/10 border-red-400/20",
+    items: ["C++20", "Python", "TypeScript", "JavaScript", "Swift", "SQL"],
+  },
+  {
+    category: "Systems",
+    color: "text-orange-400 bg-orange-400/10 border-orange-400/20",
+    items: ["Lock-free data structures", "pybind11", "CMake", "IBKR API", "VTK/VMTK"],
+  },
+  {
+    category: "Web & Mobile",
+    color: "text-green-400 bg-green-400/10 border-green-400/20",
+    items: ["React", "Next.js", "React Native", "Expo", "Tailwind", "Prisma"],
+  },
+  {
+    category: "AI / ML",
+    color: "text-purple-400 bg-purple-400/10 border-purple-400/20",
+    items: ["PyTorch", "NumPy/SciPy", "OpenAI API", "Gemini", "RAG", "FinBERT"],
+  },
+  {
+    category: "Infrastructure",
+    color: "text-cyan-400 bg-cyan-400/10 border-cyan-400/20",
+    items: ["PostgreSQL", "Supabase", "Docker", "Vercel", "Git", "CI/CD"],
+  },
 ];
 
 export default function About() {
@@ -24,8 +44,8 @@ export default function About() {
           </p>
           <p>
             I&apos;ve shipped a C++20 options trading engine with sub-100ns latency, an AI
-            syllabus parser used by students across NC State, a mobile news app with
-            custom feed ranking, and refactored a 7,000-line surgical simulation to
+            syllabus parser used by students across NC State, a mobile news app on the
+            App Store, and refactored a 7,000-line surgical simulation to
             run 26x faster.
           </p>
           <p>
@@ -38,14 +58,14 @@ export default function About() {
         <div className="lg:col-span-2 space-y-5">
           {skills.map((s) => (
             <div key={s.category}>
-              <h3 className="text-xs font-mono text-text-secondary uppercase tracking-wider mb-2">
+              <h3 className={`text-xs font-mono uppercase tracking-wider mb-2 ${s.color.split(" ")[0]}`}>
                 {s.category}
               </h3>
               <div className="flex flex-wrap gap-1.5">
                 {s.items.map((item) => (
                   <span
                     key={item}
-                    className="text-xs px-2.5 py-1 rounded-full bg-surface border border-border text-text-secondary"
+                    className={`text-xs px-2.5 py-1 rounded-full border ${s.color}`}
                   >
                     {item}
                   </span>
